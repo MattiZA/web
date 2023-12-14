@@ -16,10 +16,8 @@
         </no-content-message>
         <resource-table
           v-else
-          id="files-favorites-table"
           v-model:selectedIds="selectedResourcesIds"
-          class="files-table"
-          :class="{ 'files-table-squashed': isSideBarOpen }"
+          :is-side-bar-open="isSideBarOpen"
           :are-paths-displayed="true"
           :are-thumbnails-displayed="displayThumbnails"
           :resources="paginatedResources"

@@ -437,7 +437,7 @@ export default defineComponent({
     },
     resourceType: {
       type: String,
-      required: true
+      default: 'file'
     },
     /**
      * This is only relevant for CERN and can be ignored in any other cases.
