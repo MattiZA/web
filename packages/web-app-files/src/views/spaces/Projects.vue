@@ -48,7 +48,7 @@
             v-if="viewMode === ViewModeConstants.tilesView.name"
             v-model:selectedIds="selectedResourcesIds"
             class="oc-px-m"
-            :data="paginatedItems"
+            :resources="paginatedItems"
             :resizable="true"
             :sort-fields="sortFields"
             :sort-by="sortBy"
