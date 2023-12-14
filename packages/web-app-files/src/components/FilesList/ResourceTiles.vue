@@ -34,7 +34,7 @@
         </oc-list>
       </oc-drop>
     </div>
-    <oc-list class="oc-tiles oc-flex" :class="resizable ? 'resizableTiles' : ''">
+    <oc-list class="oc-tiles oc-flex">
       <li
         v-for="resource in resources"
         :key="resource.id"
@@ -126,10 +126,6 @@ export default defineComponent({
     resources: {
       type: Array as PropType<Resource[]>,
       default: () => []
-    },
-    resizable: {
-      type: Boolean,
-      default: false
     },
     selectedIds: {
       type: Array,
@@ -406,18 +402,14 @@ export default defineComponent({
   justify-content: flex-start;
   row-gap: 1rem;
 
-  &.resizableTiles {
-    grid-template-columns: repeat(auto-fill, minmax(auto, var(--oc-size-tiles-resize-step)));
-  }
+  grid-template-columns: repeat(auto-fill, minmax(auto, var(--oc-size-tiles-resize-step)));
 
   @media only screen and (max-width: 640px) {
     grid-template-columns: 80%;
     justify-content: center;
     padding: var(--oc-space-medium) 0;
 
-    &.resizableTiles {
-      grid-template-columns: 80%;
-    }
+    grid-template-columns: 80%;
   }
 
   &-item-drop-highlight {
