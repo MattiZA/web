@@ -2,10 +2,13 @@
   <oc-table
     :class="[
       hoverableQuickActions && 'hoverable-quick-actions',
-      'files-table',
       {
         condensed: viewMode === ViewModeConstants.condensedTable.name,
-        'files-table-squashed': isSideBarOpen
+        'files-table': resourceType === 'file',
+        'files-table-squashed': resourceType === 'file' && isSideBarOpen,
+
+        'spaces-table': resourceType === 'space',
+        'spaces-table-squashed': resourceType === 'space' && isSideBarOpen
       }
     ]"
     :data="resources"
@@ -431,6 +434,10 @@ export default defineComponent({
       type: Object as PropType<SpaceResource>,
       required: false,
       default: null
+    },
+    resourceType: {
+      type: String,
+      required: true
     },
     /**
      * This is only relevant for CERN and can be ignored in any other cases.
