@@ -6,6 +6,7 @@ import { useConfigurationManager } from '../configuration'
 import { ConfigurationManager } from '../../configuration'
 import { AppNavigationItem } from '../../apps'
 import { Item } from '@ownclouders/web-client/src/helpers'
+import { FolderView } from '../../ui'
 
 export type ExtensionScope = 'resource' | 'user' | 'group' | string
 
@@ -36,11 +37,17 @@ export interface SidebarPanelExtension<R extends Item, P extends Item, T extends
   panel: SideBarPanel<R, P, T>
 }
 
+export interface FolderViewExtension extends BaseExtension {
+  type: 'folderView'
+  folderView: FolderView
+}
+
 export type Extension =
   | ActionExtension
   | SearchExtension
   | SidebarNavExtension
   | SidebarPanelExtension<Item, Item, Item>
+  | FolderViewExtension
 
 export const useExtensionRegistry = ({
   configurationManager

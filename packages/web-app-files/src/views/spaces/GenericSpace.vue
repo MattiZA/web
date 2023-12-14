@@ -71,7 +71,6 @@
             />
             <component
               :is="folderView.component"
-              :id="folderView.id"
               v-model:selectedIds="selectedResourcesIds"
               :resources="paginatedResources"
               :view-mode="viewMode"
@@ -140,8 +139,10 @@ import {
 } from '@ownclouders/web-client/src/helpers'
 
 import {
+  FolderViewExtension,
   ProcessorType,
   useEmbedMode,
+  useExtensionRegistry,
   useFileActions,
   useFileActionsCreateNewFolder
 } from '@ownclouders/web-pkg'
@@ -156,7 +157,7 @@ import {
   ResourceTable,
   CreateTargetRouteOptions,
   ImageType,
-  ViewModeConstants,
+  FolderViewModeConstants,
   VisibilityObserver,
   createFileRouteOptions,
   createLocationPublic,
@@ -253,11 +254,14 @@ export default defineComponent({
       return store.getters['Files/currentFolder']?.canUpload({ user: store.getters.user })
     })
 
-    const viewModes = computed(() => [
-      ViewModeConstants.condensedTable,
-      ViewModeConstants.default,
-      ViewModeConstants.tilesView
-    ])
+    const extensionRegistry = useExtensionRegistry()
+    const viewModes = computed(() => {
+      return [
+        ...extensionRegistry
+          .requestExtensions<FolderViewExtension>('folderView', ['resource'])
+          .map((e) => e.folderView)
+      ]
+    })
 
     const resourceTargetRouteCallback = ({
       path,
@@ -412,16 +416,7 @@ export default defineComponent({
 
     const folderView = computed(() => {
       const viewMode = unref(resourcesViewDefaults.viewMode)
-      if (viewMode === ViewModeConstants.tilesView.name) {
-        return { component: 'resource-tiles', id: 'tiles-view' }
-      } else if (
-        viewMode === ViewModeConstants.default.name ||
-        viewMode === ViewModeConstants.condensedTable.name
-      ) {
-        return { component: 'resource-table', id: 'files-space-table' }
-      } else {
-        throw new Error('unsupported viewMode')
-      }
+      return unref(viewModes).find((v) => v.name === viewMode)
     })
 
     const keyActions = useKeyboardActions()
@@ -512,7 +507,7 @@ export default defineComponent({
       isCurrentFolderEmpty,
       resourceTargetRouteCallback,
       performLoaderTask,
-      ViewModeConstants,
+      FolderViewModeConstants,
       viewModes,
       folderView,
       uploadHint: $gettext(
@@ -659,7 +654,7 @@ export default defineComponent({
       const debounced = debounce(({ unobserve }) => {
         unobserve()
         const processor =
-          this.viewMode === ViewModeConstants.tilesView.name
+          this.viewMode === FolderViewModeConstants.name.tiles
             ? ProcessorType.enum.fit
             : ProcessorType.enum.thumbnail
         this.loadPreview({

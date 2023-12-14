@@ -14,7 +14,8 @@
             <span v-translate>There are no resources marked as favorite</span>
           </template>
         </no-content-message>
-        <resource-table
+        <component
+          :is="folderView.component"
           v-else
           v-model:selectedIds="selectedResourcesIds"
           :is-side-bar-open="isSideBarOpen"
@@ -47,7 +48,7 @@
               :size="totalFilesSize"
             />
           </template>
-        </resource-table>
+        </component>
       </template>
     </files-view-wrapper>
     <file-side-bar
@@ -64,13 +65,13 @@ import { mapGetters, mapState, mapActions } from 'vuex'
 import { debounce } from 'lodash-es'
 
 import { Resource } from '@ownclouders/web-client'
-import { VisibilityObserver } from '@ownclouders/web-pkg'
+import { FolderViewExtension, VisibilityObserver, useExtensionRegistry } from '@ownclouders/web-pkg'
 import { ImageDimension, ImageType } from '@ownclouders/web-pkg'
 import { AppLoadingSpinner } from '@ownclouders/web-pkg'
 import { FileSideBar, NoContentMessage } from '@ownclouders/web-pkg'
 import { Pagination } from '@ownclouders/web-pkg'
 import { eventBus } from '@ownclouders/web-pkg'
-import { useGetMatchingSpace, useStore, ViewModeConstants } from '@ownclouders/web-pkg'
+import { useGetMatchingSpace, useStore } from '@ownclouders/web-pkg'
 
 import { AppBar } from '@ownclouders/web-pkg'
 import QuickActions from '../components/FilesList/QuickActions.vue'
@@ -80,6 +81,7 @@ import { ResourceTable } from '@ownclouders/web-pkg'
 import FilesViewWrapper from '../components/FilesViewWrapper.vue'
 import { useResourcesViewDefaults } from '../composables'
 import { useFileActions } from '@ownclouders/web-pkg'
+import { unref } from 'vue'
 
 const visibilityObserver = new VisibilityObserver()
 
@@ -101,11 +103,20 @@ export default defineComponent({
     const store = useStore()
     const { getMatchingSpace } = useGetMatchingSpace()
 
-    const viewModes = computed(() => [
-      ViewModeConstants.condensedTable,
-      ViewModeConstants.default,
-      ViewModeConstants.tilesView
-    ])
+    const resourcesViewDefaults = useResourcesViewDefaults<Resource, any, any[]>()
+
+    const extensionRegistry = useExtensionRegistry()
+    const viewModes = computed(() => {
+      return [
+        ...extensionRegistry
+          .requestExtensions<FolderViewExtension>('folderView', ['favorite'])
+          .map((e) => e.folderView)
+      ]
+    })
+    const folderView = computed(() => {
+      const viewMode = unref(resourcesViewDefaults.viewMode)
+      return unref(viewModes).find((v) => v.name === viewMode)
+    })
 
     const loadResourcesEventToken = ref(null)
 
@@ -125,9 +136,10 @@ export default defineComponent({
 
     return {
       ...useFileActions(),
-      ...useResourcesViewDefaults<Resource, any, any[]>(),
+      ...resourcesViewDefaults,
       getMatchingSpace,
-      viewModes
+      viewModes,
+      folderView
     }
   },
 

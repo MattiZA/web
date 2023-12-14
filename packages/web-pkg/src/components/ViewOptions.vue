@@ -68,7 +68,7 @@
           />
         </li>
         <li
-          v-if="viewModes.includes(ViewModeConstants.tilesView)"
+          v-if="viewModes.find((v) => v.name === FolderViewModeConstants.name.tiles)"
           class="files-view-options-list-item oc-visible@s oc-flex oc-flex-between oc-flex-middle"
         >
           <label for="tiles-size-slider" v-text="$gettext('Tile size')" />
@@ -99,10 +99,10 @@ import {
   useRouteQueryPersisted,
   useRouter,
   PaginationConstants,
-  ViewModeConstants,
+  FolderViewModeConstants,
   useRouteName
 } from '../composables'
-import { ViewMode } from '../ui/types'
+import { FolderView } from '../ui/types'
 
 export default defineComponent({
   props: {
@@ -128,10 +128,10 @@ export default defineComponent({
     viewModeDefault: {
       type: String,
       required: false,
-      default: () => ViewModeConstants.defaultModeName
+      default: () => FolderViewModeConstants.defaultModeName
     },
     viewModes: {
-      type: Array as PropType<ViewMode[]>,
+      type: Array as PropType<FolderView[]>,
       default: () => []
     }
   },
@@ -157,13 +157,13 @@ export default defineComponent({
 
     const routeName = useRouteName()
     const viewModeQuery = useRouteQueryPersisted({
-      name: `${unref(routeName)}-${ViewModeConstants.queryName}`,
+      name: `${unref(routeName)}-${FolderViewModeConstants.queryName}`,
       defaultValue: props.viewModeDefault
     })
 
     const viewSizeQuery = useRouteQueryPersisted({
-      name: ViewModeConstants.tilesSizeQueryName,
-      defaultValue: ViewModeConstants.tilesSizeDefault.toString()
+      name: FolderViewModeConstants.tilesSizeQueryName,
+      defaultValue: FolderViewModeConstants.tilesSizeDefault.toString()
     })
 
     const setTilesViewSize = () => {
@@ -185,7 +185,7 @@ export default defineComponent({
       })
     }
 
-    const setViewMode = (mode: ViewMode) => {
+    const setViewMode = (mode: FolderView) => {
       viewModeQuery.value = mode.name
     }
 
@@ -208,7 +208,7 @@ export default defineComponent({
     )
 
     return {
-      ViewModeConstants,
+      FolderViewModeConstants,
       viewModeCurrent: viewModeQuery,
       viewSizeCurrent: viewSizeQuery,
       itemsPerPageCurrent: itemsPerPageQuery,

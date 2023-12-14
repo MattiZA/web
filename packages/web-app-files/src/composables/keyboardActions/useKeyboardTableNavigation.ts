@@ -1,4 +1,4 @@
-import { QueryValue, useStore, ViewModeConstants } from '@ownclouders/web-pkg'
+import { QueryValue, useStore, FolderViewModeConstants } from '@ownclouders/web-pkg'
 import { useScrollTo } from '@ownclouders/web-pkg'
 import { computed, Ref, ref, unref, nextTick, watchEffect } from 'vue'
 import { Key, KeyboardActions, ModifierKey } from '@ownclouders/web-pkg'
@@ -312,7 +312,7 @@ export const useKeyboardTableNavigation = (
   watchEffect(() => {
     bindKeyActionsIds.value.forEach((id) => keyActions.removeKeyAction(id))
     bindKeyActionsIds.value = []
-    ViewModeConstants.tilesView.name === viewMode.value
+    FolderViewModeConstants.name.tiles === viewMode.value
       ? bindTilesViewKeyActions()
       : bindTableViewKeyActions()
   })

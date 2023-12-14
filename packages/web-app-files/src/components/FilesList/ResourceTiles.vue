@@ -1,5 +1,5 @@
 <template>
-  <div class="oc-px-m oc-pt-l">
+  <div id="tiles-view" class="oc-px-m oc-pt-l">
     <div v-if="sortFields.length" class="oc-tile-sorting oc-border-b oc-mb-m oc-pb-s">
       <span class="oc-mr-xs" v-text="$gettext('Sort by: ')" />
       <oc-button id="oc-tiles-sort-btn" appearance="raw" gap-size="none">
@@ -103,7 +103,7 @@
 import { onBeforeUpdate, defineComponent, nextTick, PropType, computed, ref, unref } from 'vue'
 import { useGettext } from 'vue3-gettext'
 import { Resource, SpaceResource } from '@ownclouders/web-client'
-import { useStore, SortDir, SortField, ViewModeConstants } from '@ownclouders/web-pkg'
+import { useStore, SortDir, SortField, FolderViewModeConstants } from '@ownclouders/web-pkg'
 import { ImageDimension } from '@ownclouders/web-pkg'
 import { createFileRouteOptions } from '@ownclouders/web-pkg'
 import { displayPositionedDropdown } from '@ownclouders/web-pkg'
@@ -163,7 +163,7 @@ export default defineComponent({
     viewSize: {
       type: Number,
       required: false,
-      default: () => ViewModeConstants.tilesSizeDefault
+      default: () => FolderViewModeConstants.tilesSizeDefault
     },
     dragDrop: {
       type: Boolean,
