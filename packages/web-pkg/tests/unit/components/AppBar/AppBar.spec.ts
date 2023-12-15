@@ -12,6 +12,7 @@ import {
 } from 'web-test-helpers'
 import { ArchiverService } from '../../../../src/services'
 import { FolderViewModeConstants } from '../../../../src/composables'
+import { FolderView } from '../../../../src'
 
 const selectors = {
   ocBreadcrumbStub: 'oc-breadcrumb-stub',
@@ -114,7 +115,7 @@ describe('AppBar component', () => {
         expect(wrapper.find(selectors.viewOptionsStub).exists()).toBeFalsy()
       })
       it('passes viewModes array to ViewOptions', () => {
-        const viewModes = [FolderViewModeConstants.tilesView]
+        const viewModes = [mock<FolderView>]
         const { wrapper } = getShallowWrapper([], {}, { hasViewOptions: true, viewModes })
         expect(wrapper.findComponent<any>(selectors.viewOptionsStub).props('viewModes')).toEqual(
           viewModes
