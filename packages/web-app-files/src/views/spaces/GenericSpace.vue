@@ -3,6 +3,7 @@
     <whitespace-context-menu ref="whitespaceContextMenu" :space="space" />
     <files-view-wrapper>
       <app-bar
+        ref="appBarRef"
         :breadcrumbs="breadcrumbs"
         :breadcrumbs-context-actions-items="[currentFolder]"
         :has-bulk-actions="displayFullAppBar"
@@ -83,6 +84,8 @@
               :header-position="fileListHeaderY /* table */"
               :sort-fields="sortFields /* tiles */"
               :view-size="viewSize /* tiles */"
+              :style="folderViewStyle"
+              v-bind="folderView.componentAttrs?.()"
               @file-dropped="fileDropped"
               @file-click="triggerDefaultAction"
               @row-mounted="rowMounted"
@@ -125,7 +128,16 @@
 <script lang="ts">
 import { debounce, omit, last } from 'lodash-es'
 import { basename } from 'path'
-import { computed, defineComponent, PropType, onBeforeUnmount, onMounted, unref, ref } from 'vue'
+import {
+  computed,
+  defineComponent,
+  PropType,
+  onBeforeUnmount,
+  onMounted,
+  unref,
+  ref,
+  watch
+} from 'vue'
 import { RouteLocationNamedRaw } from 'vue-router'
 import { mapGetters, mapState, mapActions, mapMutations, useStore } from 'vuex'
 import { useGettext } from 'vue3-gettext'
@@ -192,6 +204,7 @@ import {
   useKeyboardTableNavigation,
   useKeyboardTableSpaceActions
 } from 'web-app-files/src/composables/keyboardActions'
+import { ComponentPublicInstance } from 'vue'
 
 const visibilityObserver = new VisibilityObserver()
 
@@ -418,6 +431,14 @@ export default defineComponent({
       const viewMode = unref(resourcesViewDefaults.viewMode)
       return unref(viewModes).find((v) => v.name === viewMode)
     })
+    const appBarRef = ref<ComponentPublicInstance | null>()
+    const folderViewStyle = computed(() => {
+      return {
+        ...(unref(folderView)?.isScrollable === false && {
+          height: `calc(100% - ${unref(appBarRef)?.$el.getBoundingClientRect().height}px)`
+        })
+      }
+    })
 
     const keyActions = useKeyboardActions()
     useKeyboardTableNavigation(
@@ -509,7 +530,9 @@ export default defineComponent({
       performLoaderTask,
       FolderViewModeConstants,
       viewModes,
+      appBarRef,
       folderView,
+      folderViewStyle,
       uploadHint: $gettext(
         'Drag files and folders here or use the "New" or "Upload" buttons to add files'
       ),

@@ -1,7 +1,7 @@
 <template>
   <div class="oc-flex">
     <files-view-wrapper>
-      <app-bar :view-modes="viewModes" :is-side-bar-open="isSideBarOpen" />
+      <app-bar ref="appBarRef" :view-modes="viewModes" :is-side-bar-open="isSideBarOpen" />
       <app-loading-spinner v-if="areResourcesLoading" />
       <template v-else>
         <no-content-message
@@ -25,6 +25,8 @@
           :header-position="fileListHeaderY"
           :sort-by="sortBy"
           :sort-dir="sortDir"
+          :style="folderViewStyle"
+          v-bind="folderView.componentAttrs?.()"
           @file-click="triggerDefaultAction"
           @row-mounted="rowMounted"
           @sort="handleSort"
@@ -82,6 +84,7 @@ import FilesViewWrapper from '../components/FilesViewWrapper.vue'
 import { useResourcesViewDefaults } from '../composables'
 import { useFileActions } from '@ownclouders/web-pkg'
 import { unref } from 'vue'
+import { ComponentPublicInstance } from 'vue'
 
 const visibilityObserver = new VisibilityObserver()
 
@@ -117,7 +120,14 @@ export default defineComponent({
       const viewMode = unref(resourcesViewDefaults.viewMode)
       return unref(viewModes).find((v) => v.name === viewMode)
     })
-
+    const appBarRef = ref<ComponentPublicInstance | null>()
+    const folderViewStyle = computed(() => {
+      return {
+        ...(unref(folderView)?.isScrollable === false && {
+          height: `calc(100% - ${unref(appBarRef)?.$el.getBoundingClientRect().height}px)`
+        })
+      }
+    })
     const loadResourcesEventToken = ref(null)
 
     onMounted(() => {
@@ -139,7 +149,9 @@ export default defineComponent({
       ...resourcesViewDefaults,
       getMatchingSpace,
       viewModes,
-      folderView
+      appBarRef,
+      folderView,
+      folderViewStyle
     }
   },
 
