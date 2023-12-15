@@ -11,7 +11,6 @@ import {
   RouteLocation
 } from 'web-test-helpers'
 import { ArchiverService } from '../../../../src/services'
-import { FolderViewModeConstants } from '../../../../src/composables'
 import { FolderView } from '../../../../src'
 
 const selectors = {

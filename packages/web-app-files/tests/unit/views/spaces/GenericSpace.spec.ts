@@ -15,10 +15,6 @@ import {
 } from 'web-test-helpers'
 import {
   ConfigurationManager,
-  Extension,
-  FolderViewExtension,
-  FolderViewModeConstants,
-  configurationManager,
   useBreadcrumbsFromPath,
   useExtensionRegistry
 } from '@ownclouders/web-pkg'
