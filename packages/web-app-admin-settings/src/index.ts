@@ -20,7 +20,13 @@ const appInfo = {
   isFileEditor: false,
   applicationMenu: {
     enabled: (store: Store<unknown>, ability: Ability) => {
-      return !!store.getters?.user?.id && ability.can('read-all', 'Setting')
+      return (
+        !!store.getters?.user?.id &&
+        (ability.can('read-all', 'Setting') ||
+          ability.can('read-all', 'Account') ||
+          ability.can('read-all', 'Group') ||
+          ability.can('read-all', 'Drive'))
+      )
     },
     priority: 40
   }

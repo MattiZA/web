@@ -9,13 +9,13 @@
         v-if="appMenuItems.length && !isEmbedModeEnabled"
         :applications-list="appMenuItems"
       />
-      <router-link
-        ref="navigationSidebarLogo"
-        v-oc-tooltip="$gettext('Back to home')"
-        to="/"
-        class="oc-width-1-1"
-      >
-        <oc-img :src="currentTheme.logo.topbar" :alt="sidebarLogoAlt" class="oc-logo-image" />
+      <router-link ref="navigationSidebarLogo" :to="homeLink" class="oc-width-1-1">
+        <oc-img
+          v-oc-tooltip="$gettext('Back to home')"
+          :src="currentTheme.logo.topbar"
+          :alt="sidebarLogoAlt"
+          class="oc-logo-image"
+        />
       </router-link>
     </div>
     <div v-if="!contentOnLeftPortal" class="oc-topbar-center">
@@ -56,6 +56,7 @@ import {
   useCapabilityNotifications,
   useEmbedMode,
   usePublicLinkContext,
+  usePublicLinkToken,
   useRouter,
   useStore,
   useThemeStore,
@@ -91,10 +92,22 @@ export default {
     const router = useRouter()
     const ability = useAbility()
     const { isEnabled: isEmbedModeEnabled } = useEmbedMode()
+    const publicLinkToken = usePublicLinkToken({ store })
 
     const logoWidth = ref('150px')
     const isNotificationBellEnabled = computed(() => {
       return unref(isUserContext) && unref(notificationsSupport).includes('list')
+    })
+
+    const homeLink = computed(() => {
+      if (unref(isPublicLinkContext) && !unref(isUserContext)) {
+        return {
+          name: 'resolvePublicLink',
+          params: { token: unref(publicLinkToken) }
+        }
+      }
+
+      return '/'
     })
 
     const isSideBarToggleVisible = computed(() => {
@@ -125,14 +138,10 @@ export default {
       return props.applicationsList
         .filter((app) => {
           if (app.type === 'extension') {
-            // check if the extension has at least one navItem with a matching menuId
             return (
-              store.getters
-                .getNavItemsByExtension(app.id)
-                .filter((navItem) => isNavItemPermitted(permittedMenus, navItem)).length > 0 ||
-              (app.applicationMenu.enabled instanceof Function &&
-                app.applicationMenu.enabled(store, ability) &&
-                !permittedMenus.includes('user'))
+              app.applicationMenu.enabled instanceof Function &&
+              app.applicationMenu.enabled(store, ability) &&
+              !permittedMenus.includes('user')
             )
           }
           return isNavItemPermitted(permittedMenus, app)
@@ -206,7 +215,8 @@ export default {
       logoWidth,
       isEmbedModeEnabled,
       isSideBarToggleVisible,
-      isSideBarToggleDisabled
+      isSideBarToggleDisabled,
+      homeLink
     }
   },
   computed: {

@@ -122,11 +122,14 @@
 <script lang="ts">
 import { computed, defineComponent, inject, Ref, ref, unref, watch } from 'vue'
 import { mapGetters } from 'vuex'
-import { ImageDimension, useConfigurationManager } from '@ownclouders/web-pkg'
+import {
+  ImageDimension,
+  useCapabilityFilesTags,
+  useConfigurationManager
+} from '@ownclouders/web-pkg'
 import upperFirst from 'lodash-es/upperFirst'
 import { ShareTypes } from '@ownclouders/web-client/src/helpers/share'
 import {
-  useCapabilityFilesTags,
   useClientService,
   usePublicLinkContext,
   useStore,
@@ -233,7 +236,11 @@ export default defineComponent({
       })
     })
     const showWebDavDetails = computed(() => {
-      return store.getters['Files/areWebDavDetailsShown']
+      /**
+       * webDavPath might not be set when user is navigating on public link,
+       * even if the user is authenticated and the file owner.
+       */
+      return store.getters['Files/areWebDavDetailsShown'] && unref(resource).webDavPath
     })
     const formatDateRelative = (date) => {
       return formatRelativeDateFromJSDate(new Date(date), language.current)

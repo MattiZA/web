@@ -43,7 +43,7 @@ export type AppConfigObject = Record<string, any>
 
 export interface ApplicationMenuItem {
   enabled: () => boolean
-  priority: number
+  priority?: number
   openAsEditor?: boolean
 }
 

@@ -21,6 +21,7 @@ import {
   isPersonalSpaceResource,
   isShareSpaceResource
 } from '@ownclouders/web-client/src/helpers'
+import { Store } from 'vuex'
 
 // just a dummy function to trick gettext tools
 function $gettext(msg) {
@@ -35,7 +36,9 @@ const appInfo = {
   isFileEditor: false,
   extensions: [],
   applicationMenu: {
-    enabled: () => true,
+    enabled: (store: Store<unknown>) => {
+      return !!store.getters?.user?.id
+    },
     priority: 10
   }
 }
@@ -128,7 +131,7 @@ export const navItems = (context): AppNavigationItem[] => {
 export default defineWebApplication({
   setup(args) {
     return {
-      appInfo,
+      appInfo: appInfo as any,
       store,
       routes: buildRoutes({
         App,
