@@ -100,7 +100,10 @@
             <div class="oc-width-1-1">
               <p class="oc-my-rm">
                 <span class="oc-display-block" v-text="personalStorageLabel" />
-                <span class="oc-text-small" v-text="personalStorageDetailsLabel" />
+                <span
+                  class="storage-wrapper-quota oc-text-small"
+                  v-text="personalStorageDetailsLabel"
+                />
               </p>
               <oc-progress
                 v-if="limitedPersonalStorage"
