@@ -61,7 +61,7 @@ When(
 )
 
 Then(
-  '{string} should see the following account menu title {string}',
+  '{string} should see the following account page title {string}',
   async function (this: World, stepUser: string, title: string): Promise<void> {
     const { page } = this.actorsEnvironment.getActor({ key: stepUser })
     const accountObject = new objects.account.Account({ page })

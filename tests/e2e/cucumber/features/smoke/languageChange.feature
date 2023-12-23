@@ -22,7 +22,7 @@ Feature: language settings
     And "Alice" logs in
     And "Alice" opens the user menu
     And "Alice" changes the language to "Deutsch - German"
-    Then "Alice" should see the following account menu title "Konto"
+    Then "Alice" should see the following account page title "Konto"
     When "Alice" logs out
     And "Alice" logs in
     Then "Alice" should see the following notifications
@@ -45,6 +45,6 @@ Feature: language settings
     And "Anonymous" unlocks the public link with password "%public%"
     And "Anonymous" opens the user menu
     And "Anonymous" changes the language to "Deutsch - German"
-    Then "Anonymous" should see the following account menu title "Konto"
+    Then "Anonymous" should see the following account page title "Konto"
 
 
