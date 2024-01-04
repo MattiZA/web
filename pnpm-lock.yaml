@@ -148,8 +148,8 @@ importers:
         specifier: 29.5.0
         version: 29.5.0(@babel/core@7.23.7)
       browserslist-to-esbuild:
-        specifier: ^1.2.0
-        version: 1.2.0
+        specifier: ^2.0.0
+        version: 2.0.0(browserslist@4.22.2)
       browserslist-useragent-regexp:
         specifier: ^4.0.0
         version: 4.1.0(browserslist@4.22.2)
@@ -5897,11 +5897,15 @@ packages:
       pako: 1.0.11
     dev: true
 
-  /browserslist-to-esbuild@1.2.0:
-    resolution: {integrity: sha512-ftrrbI/VHBgEnmnSyhkqvQVMp6jAKybfs0qMIlm7SLBrQTGMsdCIP4q3BoKeLsZTBQllIQtY9kbxgRYV2WU47g==}
-    engines: {node: '>=12'}
+  /browserslist-to-esbuild@2.0.0(browserslist@4.22.2):
+    resolution: {integrity: sha512-RULEb5eAHX6LUCpB7g97Z1ygda40Kc+CXPwjldLZfgCemP9EG9071Qc9Y6pXQu6Ir2kXmUhqRdHF30nB/O2YeA==}
+    engines: {node: '>=18'}
+    hasBin: true
+    peerDependencies:
+      browserslist: '*'
     dependencies:
-      browserslist: 4.21.4
+      browserslist: 4.22.2
+      meow: 13.1.0
     dev: true
 
   /browserslist-useragent-regexp@4.1.0(browserslist@4.22.2):
@@ -5917,17 +5921,6 @@ packages:
       picocolors: 1.0.0
       regexp-tree: 0.1.27
       ua-regexes-lite: 1.1.5
-    dev: true
-
-  /browserslist@4.21.4:
-    resolution: {integrity: sha512-CBHJJdDmgjl3daYjN5Cp5kbTf1mUhZoS+beLklHIvkOWscs83YAhLlF3Wsh/lciQYAcbBJgTOD44VtG31ZM4Hw==}
-    engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
-    hasBin: true
-    dependencies:
-      caniuse-lite: 1.0.30001563
-      electron-to-chromium: 1.4.390
-      node-releases: 2.0.10
-      update-browserslist-db: 1.0.10(browserslist@4.21.4)
     dev: true
 
   /browserslist@4.22.1:
@@ -7987,10 +7980,6 @@ packages:
     hasBin: true
     dependencies:
       jake: 10.8.5
-    dev: true
-
-  /electron-to-chromium@1.4.390:
-    resolution: {integrity: sha512-9h6KDGTynRfpM16U40uLSCxRO3diIKcXXI0mPChKls7sfkxOlCH1sgSJ14Rb00BFomQNHY/p67gaZSu5Mu8j6w==}
     dev: true
 
   /electron-to-chromium@1.4.587:
@@ -12069,6 +12058,11 @@ packages:
       yargs-parser: 20.2.9
     dev: true
 
+  /meow@13.1.0:
+    resolution: {integrity: sha512-o5R/R3Tzxq0PJ3v3qcQJtSvSE9nKOLSAaDuuoMzDVuGTwHdccMWcYomh9Xolng2tjT6O/Y83d+0coVGof6tqmA==}
+    engines: {node: '>=18'}
+    dev: true
+
   /merge-descriptors@1.0.1:
     resolution: {integrity: sha512-cCi6g3/Zr1iqQi6ySbseM1Xvooa98N0w31jzUYrXPX2xqObmFGHJ0tQ5u74H3mVh7wLouTseZyYIq39g8cNp1w==}
     dev: true
@@ -12710,10 +12704,6 @@ packages:
       shellwords: 0.1.1
       uuid: 8.3.2
       which: 2.0.2
-    dev: true
-
-  /node-releases@2.0.10:
-    resolution: {integrity: sha512-5GFldHPXVG/YZmFzJvKK2zDSzPKhEp0+ZR5SVaoSag9fsL5YgHbUHDfnG5494ISANDcK4KwPXAx2xqVEydmd7w==}
     dev: true
 
   /node-releases@2.0.13:
@@ -17309,17 +17299,6 @@ packages:
     resolution: {integrity: sha512-aZwGpamFO61g3OlfT7OQCHqhGnW43ieH9WZeP7QxN/G/jS4jfqUkZxoryvJgVPEcrl5NL/ggHsSmLMHuH64Lhg==}
     engines: {node: '>=4'}
     requiresBuild: true
-    dev: true
-
-  /update-browserslist-db@1.0.10(browserslist@4.21.4):
-    resolution: {integrity: sha512-OztqDenkfFkbSG+tRxBeAnCVPckDBcvibKd35yDONx6OU8N7sqgwc7rCbkJ/WcYtVRZ4ba68d6byhC21GFh7sQ==}
-    hasBin: true
-    peerDependencies:
-      browserslist: '>= 4.21.0'
-    dependencies:
-      browserslist: 4.21.4
-      escalade: 3.1.1
-      picocolors: 1.0.0
     dev: true
 
   /update-browserslist-db@1.0.13(browserslist@4.22.1):
