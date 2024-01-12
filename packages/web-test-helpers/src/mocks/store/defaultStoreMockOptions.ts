@@ -19,12 +19,6 @@ export const defaultStoreMockOptions = {
   modules: {
     ...filesModuleMockOptions,
     ...runtimeModuleMockOptions,
-    apps: {
-      state: {
-        fileEditors: [],
-        meta: {}
-      }
-    },
     External: {
       getters: {
         mimeTypes: jest.fn(() => ({}))

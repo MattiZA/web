@@ -207,14 +207,8 @@ function getWrapper({
     })
   )
 
-  const storeOptions = {
-    ...defaultStoreMockOptions,
-    getters: {
-      ...defaultStoreMockOptions.getters,
-      newFileHandlers: () => newFileHandlers,
-      user: () => ({ id: '1' })
-    }
-  }
+  const storeOptions = { ...defaultStoreMockOptions }
+
   storeOptions.getters.apps.mockImplementation(() => ({
     fileEditors: []
   }))
@@ -245,6 +239,7 @@ function getWrapper({
         plugins: [
           ...defaultPlugins({
             piniaOptions: {
+              appsState: { newFileHandlers },
               spacesState: { spaces: spaces as any },
               capabilityState: { capabilities }
             }

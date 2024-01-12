@@ -1,5 +1,5 @@
 import FileActions from 'web-app-files/src/components/SideBar/Actions/FileActions.vue'
-import { fileActions, editors, meta } from 'web-app-files/tests/__fixtures__/fileActions'
+import { fileActions } from 'web-app-files/tests/__fixtures__/fileActions'
 import { Resource, SpaceResource } from '@ownclouders/web-client/src/helpers'
 import { mock } from 'jest-mock-extended'
 import {
@@ -58,8 +58,6 @@ describe('FileActions', () => {
 function getWrapper() {
   const storeOptions = { ...defaultStoreMockOptions }
   storeOptions.modules.Files.state.currentFolder = { path: '' }
-  storeOptions.modules.apps.state.fileEditors = editors
-  storeOptions.modules.apps.state.meta = meta
   const store = createStore(storeOptions)
   return {
     wrapper: mount(FileActions, {

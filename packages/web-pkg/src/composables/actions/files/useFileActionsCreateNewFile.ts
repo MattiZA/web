@@ -22,6 +22,7 @@ import { configurationManager } from '../../../configuration'
 import { stringify } from 'qs'
 import { AncestorMetaData } from '../../../types'
 import { useMessages, useModals, useUserStore, useCapabilityStore } from '../../piniaStores'
+import { ApplicationNewFileHandler } from '../../../apps'
 
 export const useFileActionsCreateNewFile = ({
   store,
@@ -31,7 +32,7 @@ export const useFileActionsCreateNewFile = ({
 }: {
   store?: Store<any>
   space?: SpaceResource
-  newFileHandlers?: Ref<any> // FIXME: type?
+  newFileHandlers?: Ref<ApplicationNewFileHandler[]>
   mimetypesAllowedForCreation?: Ref<any> // FIXME: type?
 } = {}) => {
   store = store || useStore()
@@ -214,7 +215,7 @@ export const useFileActionsCreateNewFile = ({
         name: 'create-new-file',
         icon: 'add',
         handler: (args) => handler(args, newFileHandler.ext, openAction),
-        label: () => newFileHandler.menuTitle($gettext),
+        label: () => newFileHandler.menuTitle(),
         isEnabled: () => {
           return unref(currentFolder)?.canUpload({ user: userStore.user })
         },

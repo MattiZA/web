@@ -18,7 +18,9 @@ import {
   useAuthStore,
   AuthStore,
   useCapabilityStore,
-  CapabilityStore
+  CapabilityStore,
+  useAppsStore,
+  AppsStore
 } from '@ownclouders/web-pkg'
 import { authService } from '../services/auth'
 import {
@@ -120,24 +122,14 @@ export const announceConfiguration = async (path: string): Promise<RuntimeConfig
  * @param language
  */
 export const announceStore = async ({
-  runtimeConfiguration
+  runtimeConfiguration,
+  appsStore
 }: {
   runtimeConfiguration: RuntimeConfiguration
+  appsStore: AppsStore
 }): Promise<any> => {
   const store = new Store({ ...storeOptions })
-  await store.dispatch('loadConfig', runtimeConfiguration)
-
-  /**
-   * TODO: Find a different way to access store from within JS files
-   * potential options are:
-   * - use the api which already is in place but deprecated
-   * - use a global object
-   *
-   * at the moment it is not clear if this api should be exposed or not.
-   * we need to decide if we extend the api more or just expose the store and de deprecate
-   * the apis for retrieving it.
-   */
-  ;(window as any).__$store = store
+  await store.dispatch('loadConfig', { config: runtimeConfiguration, appsStore })
   return store
 }
 
@@ -243,23 +235,22 @@ export const initializeApplications = async ({
  */
 export const announceApplicationsReady = async ({
   app,
-  store,
+  appsStore,
   applications
 }: {
   app: App
-  store: Store<any>
+  appsStore: AppsStore
   applications: NextApplication[]
 }): Promise<void> => {
   await Promise.all(applications.map((application) => application.ready()))
-  const apps = store.state.apps
 
   const mapping: ResourceIconMapping = {
     mimeType: {},
     extension: {}
   }
 
-  ;(apps.fileEditors as any[]).forEach((editor) => {
-    const meta = apps.meta[editor.app]
+  appsStore.fileEditors.forEach((editor) => {
+    const meta = appsStore.apps[editor.app]
 
     const getIconDefinition = () => {
       return {
@@ -342,13 +333,23 @@ export const announceTheme = async ({
 }
 
 export const announcePiniaStores = () => {
+  const appsStore = useAppsStore()
   const authStore = useAuthStore()
   const capabilityStore = useCapabilityStore()
   const messagesStore = useMessages()
   const modalStore = useModals()
   const spacesStore = useSpacesStore()
   const userStore = useUserStore()
-  return { authStore, capabilityStore, messagesStore, modalStore, spacesStore, userStore }
+
+  return {
+    appsStore,
+    authStore,
+    capabilityStore,
+    messagesStore,
+    modalStore,
+    spacesStore,
+    userStore
+  }
 }
 
 /**
@@ -539,13 +540,15 @@ export const announcePasswordPolicyService = ({ app }: { app: App }): void => {
  */
 export const announceDefaults = ({
   store,
-  router
+  router,
+  appsStore
 }: {
   store: Store<unknown>
   router: Router
+  appsStore: AppsStore
 }): void => {
   // set home route
-  const appIds = store.getters.appIds
+  const appIds = appsStore.appIds
   let defaultExtensionId = store.getters.configuration.options.defaultExtension
   if (!defaultExtensionId || appIds.indexOf(defaultExtensionId) < 0) {
     defaultExtensionId = appIds[0]

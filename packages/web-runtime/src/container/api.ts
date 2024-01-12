@@ -80,21 +80,6 @@ const announceNavigationItems = (
 }
 
 /**
- * inject application specific extension into runtime
- *
- * @param applicationId
- * @param store
- * @param extension
- */
-const announceExtension = (
-  applicationId: string,
-  store: Store<unknown>,
-  extension: { [key: string]: unknown }
-): void => {
-  store.commit('REGISTER_EXTENSION', { app: applicationId, extension })
-}
-
-/**
  * inject application specific translations into runtime
  *
  * @param translations
@@ -239,8 +224,6 @@ export const buildRuntimeApi = ({
       announceTranslations(supportedLanguages, gettext, appTranslations),
     announceStore: (applicationStore: Module<unknown, unknown>): void =>
       announceStore(applicationName, store, applicationStore),
-    announceExtension: (extension: { [key: string]: unknown }): void =>
-      announceExtension(applicationId, store, extension),
     requestStore: (): Store<unknown> => requestStore(store),
     requestRouter: (): Router => requestRouter(router),
     openPortal: (

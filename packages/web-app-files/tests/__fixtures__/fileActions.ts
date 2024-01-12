@@ -1,26 +1,3 @@
-export const meta = {
-  files: {
-    name: 'Files',
-    id: 'files',
-    icon: 'folder'
-  },
-  preview: {
-    name: 'Preview',
-    id: 'preview',
-    icon: 'image'
-  },
-  'draw-io': {
-    name: 'Draw.io',
-    id: 'draw-io',
-    icon: 'grid'
-  },
-  'text-editor': {
-    name: 'Text Editor',
-    id: 'text-editor',
-    icon: 'file-text'
-  }
-}
-
 const routes = [
   'files-personal',
   'files-favorites',
@@ -55,17 +32,6 @@ export const editors = [
     routes
   }
 ]
-
-export const apps = {
-  customFileListIndicators: [],
-  file: {
-    edit: false,
-    path: ''
-  },
-  fileEditors: editors,
-  newFileHandlers: editors,
-  meta
-}
 
 export const fileActions = {
   download: {

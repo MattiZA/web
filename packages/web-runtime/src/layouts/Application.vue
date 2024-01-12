@@ -39,6 +39,7 @@ import orderBy from 'lodash-es/orderBy'
 import {
   AppLoadingSpinner,
   SidebarNavExtension,
+  useAppsStore,
   useAuthStore,
   useExtensionRegistry
 } from '@ownclouders/web-pkg'
@@ -62,6 +63,7 @@ import { useGettext } from 'vue3-gettext'
 
 import '@uppy/core/dist/style.min.css'
 import { AppNavigationItem } from '@ownclouders/web-pkg'
+import { storeToRefs } from 'pinia'
 
 const MOBILE_BREAKPOINT = 640
 
@@ -84,6 +86,9 @@ export default defineComponent({
     const authStore = useAuthStore()
     const activeApp = useActiveApp()
     const extensionRegistry = useExtensionRegistry()
+
+    const appsStore = useAppsStore()
+    const { apps } = storeToRefs(appsStore)
 
     const extensionNavItems = computed(() =>
       extensionRegistry
@@ -174,6 +179,7 @@ export default defineComponent({
     })
 
     return {
+      apps,
       isSidebarVisible,
       isLoading,
       navItems,
@@ -182,7 +188,7 @@ export default defineComponent({
     }
   },
   computed: {
-    ...mapGetters(['apps', 'configuration']),
+    ...mapGetters(['configuration']),
     isIE11() {
       return !!(window as any).MSInputMethodContext && !!(document as any).documentMode
     },
@@ -195,7 +201,7 @@ export default defineComponent({
     applicationsList() {
       const list = []
 
-      Object.values(this.apps).forEach((app: any) => {
+      Object.values(this.apps).forEach((app) => {
         list.push({
           ...app,
           type: 'extension'

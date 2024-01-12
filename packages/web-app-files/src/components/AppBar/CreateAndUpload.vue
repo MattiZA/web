@@ -190,6 +190,7 @@ import { mapActions, mapGetters } from 'vuex'
 import {
   isLocationPublicActive,
   isLocationSpacesActive,
+  useAppsStore,
   useCapabilityStore,
   useFileActions,
   useFileActionsCreateNewShortcut,
@@ -274,6 +275,9 @@ export default defineComponent({
     const language = useGettext()
     const areFileExtensionsShown = computed(() => unref(store.state.Files.areFileExtensionsShown))
 
+    const appsStore = useAppsStore()
+    const { newFileHandlers } = storeToRefs(appsStore)
+
     useUpload({ uppyService })
 
     if (!uppyService.getPlugin('HandleUpload')) {
@@ -306,12 +310,10 @@ export default defineComponent({
 
     const createNewShortcutAction = computed(() => unref(createNewShortcut)[0].handler)
 
-    const newFileHandlers = computed(() => store.getters.newFileHandlers)
-
     const { actions: createNewFileActions } = useFileActionsCreateNewFile({
       store,
       space: props.space,
-      newFileHandlers: newFileHandlers
+      newFileHandlers
     })
 
     const mimetypesAllowedForCreation = computed(() => {
@@ -432,6 +434,7 @@ export default defineComponent({
     return {
       ...useFileActions({ store }),
       ...useRequest(),
+      newFileHandlers,
       clientService,
       isPublicLocation: useActiveLocation(isLocationPublicActive, 'files-public-link'),
       isSpacesGenericLocation: useActiveLocation(isLocationSpacesActive, 'files-spaces-generic'),
@@ -457,7 +460,7 @@ export default defineComponent({
     }
   },
   computed: {
-    ...mapGetters(['configuration', 'newFileHandlers']),
+    ...mapGetters(['configuration']),
     ...mapGetters('Files', ['files', 'selectedFiles', 'clipboardResources']),
     ...mapGetters('runtime/ancestorMetaData', ['ancestorMetaData']),
 

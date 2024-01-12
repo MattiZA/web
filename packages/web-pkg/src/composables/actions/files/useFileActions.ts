@@ -33,7 +33,7 @@ import {
   useFileActionsRestore,
   useFileActionsCreateSpaceFromResource
 } from './index'
-import { useCapabilityStore } from '../../piniaStores'
+import { useAppsStore, useCapabilityStore } from '../../piniaStores'
 
 export const EDITOR_MODE_EDIT = 'edit'
 export const EDITOR_MODE_CREATE = 'create'
@@ -44,6 +44,7 @@ export interface GetFileActionsOptions extends FileActionOptions {
 
 export const useFileActions = ({ store }: { store?: Store<any> } = {}) => {
   store = store || useStore()
+  const appsStore = useAppsStore()
   const capabilityStore = useCapabilityStore()
   const router = useRouter()
   const { $gettext } = useGettext()
@@ -87,22 +88,21 @@ export const useFileActions = ({ store }: { store?: Store<any> } = {}) => {
   ])
 
   const editorActions = computed(() => {
-    const apps = store.state.apps
-    return (apps.fileEditors as any[])
+    return appsStore.fileEditors
       .map((editor): FileAction => {
         return {
-          name: `editor-${editor.id}`,
+          name: `editor-${editor.app}`,
           label: () => {
             if (editor.label) {
               return $gettext(editor.label)
             }
-            return $gettext('Open in %{app}', { app: apps.meta[editor.app].name }, true)
+            return $gettext('Open in %{app}', { app: appsStore.apps[editor.app].name }, true)
           },
-          icon: apps.meta[editor.app].icon,
-          ...(apps.meta[editor.app].iconFillType && {
-            iconFillType: apps.meta[editor.app].iconFillType
+          icon: appsStore.apps[editor.app].icon,
+          ...(appsStore.apps[editor.app].iconFillType && {
+            iconFillType: appsStore.apps[editor.app].iconFillType
           }),
-          img: apps.meta[editor.app].img,
+          img: appsStore.apps[editor.app].img,
           handler: (options) =>
             openEditor(
               editor,
@@ -141,7 +141,9 @@ export const useFileActions = ({ store }: { store?: Store<any> } = {}) => {
           },
           hasPriority: editor.hasPriority,
           componentType: 'button',
-          class: `oc-files-actions-${kebabCase(apps.meta[editor.app].name).toLowerCase()}-trigger`
+          class: `oc-files-actions-${kebabCase(
+            appsStore.apps[editor.app].name
+          ).toLowerCase()}-trigger`
         }
       })
       .sort((first, second) => {

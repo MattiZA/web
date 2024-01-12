@@ -1,12 +1,18 @@
 import { useGettext } from 'vue3-gettext'
 import translations from '../l10n/translations.json'
 import TextEditor from './App.vue'
-import { AppWrapperRoute, defineWebApplication, useUserStore } from '@ownclouders/web-pkg'
+import {
+  AppWrapperRoute,
+  defineWebApplication,
+  useAppsStore,
+  useUserStore
+} from '@ownclouders/web-pkg'
 
 export default defineWebApplication({
   setup() {
     const { $gettext } = useGettext()
     const userStore = useUserStore()
+    const appsStore = useAppsStore()
 
     const appId = 'text-editor'
 
@@ -50,11 +56,13 @@ export default defineWebApplication({
         }
       ]
 
-      const config = (window as any).__$store.getters.extensionConfigByAppId(appId)
+      const config = appsStore.getExternalAppConfigByAppId(appId)
       extensions.push(...(config.extraExtensions || []).map((ext) => ({ extension: ext })))
 
-      let primaryExtensions = (window as any).__$store.getters.extensionConfigByAppId(appId)
-        .primaryExtensions || ['txt', 'md']
+      let primaryExtensions = appsStore.getExternalAppConfigByAppId(appId).primaryExtensions || [
+        'txt',
+        'md'
+      ]
 
       if (typeof primaryExtensions === 'string') {
         primaryExtensions = [primaryExtensions]
